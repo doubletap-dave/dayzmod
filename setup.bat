@@ -41,35 +41,35 @@ rem - chocolatey: install prerequisite packages and refresh the environment
 @echo -- Downloading and install 7zip
 choco install 7zip -y
 @echo -- Downloading and install 7zip ... DONE!
-cls
+
 @echo -- Downloading and install wget
 choco install wget -y
 @echo -- Downloading and install wget ... DONE!
-cls
+
 @echo -- Downloading and install git
 choco install git.install git -y
 @echo -- Downloading and install git ... DONE!
-cls
+
 @echo -- Downloading and install vcredist2008
 choco install vcredist2008 -y
 @echo -- Downloading and install vcredist2008 ... DONE!
-cls
+
 @echo -- Downloading and install vcredist2010
 choco install vcredist2010 -y
 @echo -- Downloading and install vcredist2010 ... DONE!
-cls
+
 @echo -- Downloading and install vcredist2013
 choco install vcredist2013 -y
 @echo -- Downloading and install vcredist2013 ... DONE!
-cls
+
 @echo -- Downloading and install vcredist2015
 choco install vcredist2015 -y
 @echo -- Downloading and install vcredist2015 ... DONE!
-cls
+
 @echo -- Downloading and install mariadb
 choco install mariadb -y
 @echo -- Downloading and install mariadb ... DONE!
-cls
+
 @echo -- Downloading and install heidisql ... DONE!
 choco install heidisql -y
 @echo -- Downloading and install heidisql ... DONE!
