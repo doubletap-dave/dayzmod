@@ -108,7 +108,7 @@ mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, 
 cls
 
 rem - download the DayZMod files and put the files in their place
-cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/28/@DayZMod_Server-1.8.9-Full.rar" && 7z x "@DayZMod_Server-1.8.9-Full.rar"
+::cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/28/@DayZMod_Server-1.8.9-Full.rar" && 7z x "@DayZMod_Server-1.8.9-Full.rar"
 xcopy @DayZ "%srvr_a2_oa%\@DayZ" /s /i
 xcopy @Hive "%srvr_a2_oa%\@Hive" /s /i
 xcopy Keys "%srvr_a2_oa%\Keys" /s /i
