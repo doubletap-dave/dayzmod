@@ -75,20 +75,20 @@ choco install heidisql -y
 @echo -- Downloading and install heidisql ... DONE!
 
 rem - download and extract the server folder structure and files
-cd C:\ && wget https://github.com/topiaryx/dayzmod/raw/master/files/_server.7z && 7z x server.7z && del server.7z
+cd C:\ && wget "https://github.com/topiaryx/dayzmod/raw/master/files/_server.7z" && 7z x "_server.7z" && del "_server.7z"
 cls
 
 rem - download standalone servers for arma 2 and arma 2 operation arrowhead
-steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2%" +app_update "%a2_id%" validate +quit
-cls
-steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2_oa%" +app_update "%a2_oa_id%" validate +quit
-cls
+::steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2%" +app_update "%a2_id%" validate +quit
+::cls
+::steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2_oa%" +app_update "%a2_oa_id%" validate +quit
+::cls
 
 rem - create a symbolic link between addon folders (removes requirement for files to reside in the same folder)
-@echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2
-mklink /d %srvr_a2%\AddOns %srvr_a2_oa%\AddOns
-@echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2 ... DONE!
-cls
+::@echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2
+::mklink /d %srvr_a2%\AddOns %srvr_a2_oa%\AddOns
+::@echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2 ... DONE!
+::cls
 
 rem - change the arma 2 oa steam appid enabling it to show up in the steam dayzmod server browser
 @echo Setting proper Steam AppID (224580)
@@ -108,8 +108,7 @@ mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, 
 cls
 
 rem - download the SQL files and integrate them into the database
-cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z" && 7z x "sql.7z" && del "sql.7z"
-for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
+:: cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z" && 7z x "sql.7z" && del "sql.7z" && for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
 cls
 
 rem - download the DayZMod files and put the files in their place
@@ -134,9 +133,15 @@ cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/bec
 cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/dart.7z" && 7z x "dart.zip" -o%srvr_tool% -r
 
 rem - nuke the download directory after all operations have been completed
-:: @rd /s /q %srvr_dnld%
+@rd /s /q %srvr_dnld%
 
 rem - open up the required ports in the firewall
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-IN-UDP:2302" dir=in action=allow protocol=UDP localport=2302
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-IN-UDP:2303" dir=in action=allow protocol=UDP localport=2303
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-OUT-arma2oa" dir=out action=allow protocol=UDP program="%srvr_a2_oa%\arma2oaserver.exe"
+
+rem - file unblocker
+cd %srvr_a2_oa%
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File DatabaseMySql.dll"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File tbb.dll"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File tbbmalloc.dll"
