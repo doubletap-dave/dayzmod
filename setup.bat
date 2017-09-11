@@ -1,7 +1,7 @@
 cls
 @echo off
 
-:: variables
+rem - variables
 set steam_u=nnoocha
 set steam_p=2JuWH3iVbO5p
 
@@ -26,10 +26,10 @@ set dzm_db_n=hivemind
 set dzm_db_u=dayzhivemind
 set dzm_db_p=changeme
 
-:: install chocolatey
+rem - install chocolatey
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
-:: set paths
+rem - set paths
 set "PATH=%PATH%;C:\_server\_steamcmd"
 
 cls
@@ -37,7 +37,7 @@ cls
 cls
 
 @echo
-:: chocolatey: install prerequisite packages and refresh the environment
+rem - chocolatey: install prerequisite packages and refresh the environment
 @echo -- Downloading and install 7zip
 choco install 7zip -y
 @echo -- Downloading and install 7zip ... DONE!
@@ -74,28 +74,28 @@ cls
 choco install heidisql -y
 @echo -- Downloading and install heidisql ... DONE!
 
-:: download and extract the server folder structure and files
-cd C:\ && wget https://github.com/topiaryx/dayzmod/raw/master/server.7z && 7z x server.7z && del server.7z
+rem - download and extract the server folder structure and files
+cd C:\ && wget https://github.com/topiaryx/dayzmod/raw/master/files/_server.7z && 7z x server.7z && del server.7z
 cls
 
-:: download standalone servers for arma 2 and arma 2 operation arrowhead
+rem - download standalone servers for arma 2 and arma 2 operation arrowhead
 steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2%" +app_update "%a2_id%" validate +quit
 cls
 steamcmd +login "%steam_u%" "%steam_p%" +force_install_dir "%srvr_a2_oa%" +app_update "%a2_oa_id%" validate +quit
 cls
 
-:: create a symbolic link between addon folders (removes requirement for files to reside in the same folder)
+rem - create a symbolic link between addon folders (removes requirement for files to reside in the same folder)
 @echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2
 mklink /d %srvr_a2%\AddOns %srvr_a2_oa%\AddOns
 @echo -- Creating a symbolic link between ArmA 2 Operation Arrowhead and ArmA 2 ... DONE!
 cls
 
-:: change the arma 2 oa steam appid enabling it to show up in the steam dayzmod server browser
+rem - change the arma 2 oa steam appid enabling it to show up in the steam dayzmod server browser
 @echo Setting proper Steam AppID (224580)
 @echo 224580> %srvr_a2_oa%\steam_appid.txt
 @echo Setting proper Steam AppID (224580) ... DONE!
 
-:: setup MariaDB (MySQL)
+rem - setup MariaDB (MySQL drop-in replacement)
 @echo off
 mysql -u%mdb_root_u% -e"SET PASSWORD FOR '%mdb_root_u%'@'localhost' = PASSWORD('%mdb_root_p%');"
 mysql -u%mdb_root_u% -p%mdb_root_p% -e"SET character_set_server = 'utf8';"
@@ -107,31 +107,36 @@ mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, 
 @echo on
 cls
 
-:: download sql files then extract and execute them
-cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/SQL 1.8.9.rar" && 7z x "SQL 1.8.9.rar" && del "SQL 1.8.9.rar" && rename %srvr_dnld%\1.8.9 sql
+rem - download the SQL files and integrate them into the database
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z" && 7z x "sql.7z" && del "sql.7z"
 for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
 cls
 
-:: download dayzmod server and mission files, move the files to the proper directories and cleanup
+rem - download the DayZMod files and put the files in their place
 cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/28/@DayZMod_Server-1.8.9-Full.rar" && 7z x "@DayZMod_Server-1.8.9-Full.rar"
 xcopy @DayZ "%srvr_a2_oa%\@DayZ" /s /i
-xcopy @Hive "%srvr_a2_oa%\@DayZ" /s /i
+xcopy @Hive "%srvr_a2_oa%\@Hive" /s /i
 xcopy Keys "%srvr_a2_oa%\Keys" /s /i
 xcopy DatabaseMySql.dll "%srvr_a2_oa%" /s /i
 xcopy tbb.dll "%srvr_a2_oa%" /s /i
 xcopy tbbmalloc.dll "%srvr_a2_oa%" /s /i
 
+rem - download the DayZMod chernarus mission files
 cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/dayz_1337.chernarus.rar" && 7z x "dayz_1337.chernarus.rar"
 xcopy dayz_1337.chernarus "%srvr_a2_oa%\MPMissions\dayz_1337.chernarus" /s /i
 
+rem - download the battleye filters and put them in their home
 cd %srvr_dnld% && cmd /c git clone https://github.com/DayZMod/Battleye-Filters.git
 xcopy Battleye-Filters "%srvr_cfg%\battleye" /s /i
 
-cd %srvr_dnld% && wget "http://www.ibattle.org/Downloads/Bec.zip" && 7z x "Bec.zip" -o%srvr_tool%\bec -r
+rem - download BEC and DaRT and put them in their home too...
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/bec.7z" && 7z x "bec.zip" -o%srvr_tool% -r
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/dart.7z" && 7z x "dart.zip" -o%srvr_tool% -r
 
+rem - nuke the download directory after all operations have been completed
 @rd /s /q %srvr_dnld%
 
-:: open up the required ports in the firewall
+rem - open up the required ports in the firewall
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-IN-UDP:2302" dir=in action=allow protocol=UDP localport=2302
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-IN-UDP:2303" dir=in action=allow protocol=UDP localport=2303
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-OUT-arma2oa" dir=out action=allow protocol=UDP program="%srvr_a2_oa%\arma2oaserver.exe"

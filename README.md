@@ -5,6 +5,7 @@ Welcome to the all new DayZMod installer. I decided to create a new installer be
 Download 'setup.bat' and run it with admin privileges from anywhere on your system, it will navigate where it needs to go in order to set the system up.
 
 # Folder Structure [1.8.9]
+* files
 * _server
   * _cfgdayz
   * _scripts
@@ -14,4 +15,3 @@ Download 'setup.bat' and run it with admin privileges from anywhere on your syst
     * watchdog.bat
   * _steamcmd
 * arma-init.bat
-* server.7z
