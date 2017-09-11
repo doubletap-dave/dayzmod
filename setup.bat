@@ -144,9 +144,7 @@ cd %srvr_a2_oa%
 
 rem - finish up database stuff
 rem - download the SQL files create the db and create the tables
-cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat"
-cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z"
-7z x "sql.7z"
-del "sql.7z"
-sql.bat
-cls
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.sql"
+mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < sql.sql
+
+@echo DONE WITH EVERYTHING!
