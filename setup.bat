@@ -107,14 +107,6 @@ mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, 
 @echo on
 cls
 
-rem - download the SQL files create the db and create the tables
-cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat"
-sql.bat
-cls
-
-rem - actually execute the SQL files
-for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
-
 rem - download the DayZMod files and put the files in their place
 cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/28/@DayZMod_Server-1.8.9-Full.rar" && 7z x "@DayZMod_Server-1.8.9-Full.rar"
 xcopy @DayZ "%srvr_a2_oa%\@DayZ" /s /i
@@ -149,3 +141,12 @@ cd %srvr_a2_oa%
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File DatabaseMySql.dll"
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File tbb.dll"
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Unblock-File tbbmalloc.dll"
+
+rem - finish up database stuff
+rem - download the SQL files create the db and create the tables
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat"
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z"
+7z x "sql.7z"
+del "sql.7z"
+sql.bat
+cls
