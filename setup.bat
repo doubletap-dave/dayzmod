@@ -108,7 +108,8 @@ mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, 
 cls
 
 rem - download the SQL files and integrate them into the database
-:: cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/sql.7z" && 7z x "sql.7z" && del "sql.7z" && for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat"
+cmd /c sql.bat
 cls
 
 rem - download the DayZMod files and put the files in their place
