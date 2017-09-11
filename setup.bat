@@ -95,22 +95,12 @@ rem - change the arma 2 oa steam appid enabling it to show up in the steam dayzm
 @echo 224580> %srvr_a2_oa%\steam_appid.txt
 @echo Setting proper Steam AppID (224580) ... DONE!
 
-rem - setup MariaDB (MySQL drop-in replacement)
-@echo off
-mysql -u%mdb_root_u% -e"SET PASSWORD FOR '%mdb_root_u%'@'localhost' = PASSWORD('%mdb_root_p%');"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"SET character_set_server = 'utf8';"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"SET collation_server = 'utf8_general_ci';"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"CREATE DATABASE `hivemind` /*!40100 COLLATE 'utf8_general_ci' */;"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"CREATE USER '%dzm_db_u%'@'localhost' IDENTIFIED BY '%dzm_db_p%';"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SUPER  ON *.* TO %dzm_db_u%@'localhost';"
-mysql -u%mdb_root_u% -p%mdb_root_p% -e"GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, ALTER ROUTINE, CREATE, CREATE ROUTINE, CREATE TEMPORARY TABLES, CREATE VIEW, DELETE, DROP, EVENT, INDEX, INSERT, REFERENCES, TRIGGER, UPDATE, LOCK TABLES  ON `%dzm_db_n%`.* TO '%dzm_db_u%'@'localhost' WITH GRANT OPTION;"
-@echo on
+rem - download the SQL files create the db and create the tables
+cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat" && sql.bat
 cls
 
-rem - download the SQL files and integrate them into the database
-cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/sql.bat"
-cmd /c sql.bat
-cls
+rem - actually execute the SQL files
+for %i in (%srvr_dnld%\sql\*.sql) do (mysql hivemind -u%mdb_root_u% -p%mdb_root_p% < %i)
 
 rem - download the DayZMod files and put the files in their place
 cd %srvr_dnld% && wget "http://se1.dayz.nu/latest/1.8.9/Stable/28/@DayZMod_Server-1.8.9-Full.rar" && 7z x "@DayZMod_Server-1.8.9-Full.rar"
