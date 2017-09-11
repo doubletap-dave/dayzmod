@@ -134,7 +134,7 @@ cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/bec
 cd %srvr_dnld% && wget "https://github.com/topiaryx/dayzmod/raw/master/files/dart.7z" && 7z x "dart.zip" -o%srvr_tool% -r
 
 rem - nuke the download directory after all operations have been completed
-@rd /s /q %srvr_dnld%
+:: @rd /s /q %srvr_dnld%
 
 rem - open up the required ports in the firewall
 netsh advfirewall firewall add rule name="ArmA 2 DayZ Server-IN-UDP:2302" dir=in action=allow protocol=UDP localport=2302
